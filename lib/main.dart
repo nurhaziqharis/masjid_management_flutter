@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:masjid_management_flutter/views/signup.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -17,8 +19,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      // home: const LoginPage(),
+      initialRoute: '/',
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/': (context) => LoginPage(),
+        '/register': (context) => SignupPage()
+      },
     );
   }
 }
@@ -311,7 +318,9 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/register');
+                          },
                           child: Text(
                             'Sign Up',
                             style: TextStyle(

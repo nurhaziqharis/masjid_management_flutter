@@ -1,0 +1,1 @@
+const BASEURL = 'https://localhost:8080/';
