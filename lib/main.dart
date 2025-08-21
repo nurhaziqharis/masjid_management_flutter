@@ -60,12 +60,12 @@ class _LoginPageState extends State<LoginPage> {
       try {
         // POST request to your API endpoint
         final response = await http.post(
-          Uri.parse('https://your-api-endpoint.com/api/auth/login'), // Replace with your API URL
+          Uri.parse('http://127.0.0.1:8080/api/v1/auth/login'), // Replace with your API URL
           headers: {
             'Content-Type': 'application/json',
           },
           body: json.encode({
-            'email': _emailController.text.trim(),
+            'username': _emailController.text.trim(),
             'password': _passwordController.text,
           }),
         );
@@ -207,15 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                         filled: true,
                         fillColor: Colors.grey[50],
                       ),
-                      validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'Please enter your email';
-                        }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value!)) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
+
                     ),
 
                     const SizedBox(height: 16),

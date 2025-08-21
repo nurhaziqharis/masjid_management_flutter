@@ -50,17 +50,29 @@ class _SignupPageState extends State<SignupPage> {
       try {
         // POST request to your API endpoint
         final response = await http.post(
-          Uri.parse('https://your-api-endpoint.com/api/auth/register'), // Replace with your API URL
+          Uri.parse('http://127.0.0.1:8080/api/v1/auth/register'), // Replace with your API URL
           headers: {
             'Content-Type': 'application/json',
           },
           body: json.encode({
-            'name': _nameController.text.trim(),
+            'username': _nameController.text.trim(),
             'email': _emailController.text.trim(),
+            'full_name': _nameController.text.trim(),
+            'role': "USER",
             'password': _passwordController.text,
-            'phone': _phoneController.text.trim(),
+            //'phone': _phoneController.text.trim(),
           }),
         );
+
+        /*
+        {
+  "username": "string",
+  "email": "user@example.com",
+  "full_name": "string",
+  "role": "USER",
+  "password": "string"
+}
+         */
 
         if (response.statusCode == 201 || response.statusCode == 200) {
           // Successful registration
