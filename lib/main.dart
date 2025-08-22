@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:masjid_management_flutter/views/dashboard_admin.dart';
 import 'dart:convert';
 
 import 'package:masjid_management_flutter/views/signup.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => const LoginPage(),
-        '/register': (context) => const SignupPage()
+        '/register': (context) => const SignupPage(),
+        '/dashboardadmin' : (context) => const DashboardPage()
       },
     );
   }
@@ -93,6 +95,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             'password': _passwordController.text,
           }),
         );
+        print(response.body);
 
         if (response.statusCode == 200) {
           final responseData = json.decode(response.body);
@@ -105,6 +108,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 behavior: SnackBarBehavior.floating,
               ),
             );
+            Navigator.pushReplacementNamed(context, '/dashboardadmin');
           }
         } else if (response.statusCode == 401) {
           if (mounted) {
@@ -392,15 +396,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 fillColor: Colors.white,
                                 contentPadding: const EdgeInsets.all(20),
                               ),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter your email';
-                                }
-                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value!)) {
-                                  return 'Please enter a valid email';
-                                }
-                                return null;
-                              },
+                              // validator: (value) {
+                              //   if (value?.isEmpty ?? true) {
+                              //     return 'Please enter your email';
+                              //   }
+                              //   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value!)) {
+                              //     return 'Please enter a valid email';
+                              //   }
+                              //   return null;
+                              // },
                             ),
 
                             const SizedBox(height: 20),
