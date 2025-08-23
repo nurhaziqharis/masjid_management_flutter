@@ -59,7 +59,7 @@ class _DashboardPageState extends State<DashboardPage> {
           'isActive': false,
           'badge': null,
         },
-      ]
+      ],
     },
     // GENERAL group
     {
@@ -83,8 +83,8 @@ class _DashboardPageState extends State<DashboardPage> {
           'isActive': false,
           'badge': null,
         },
-      ]
-    }
+      ],
+    },
   ];
 
   @override
@@ -190,15 +190,18 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
 
                           // Group Items
-                          ...List.generate(
-                            group['items'].length,
-                                (itemIndex) {
-                              final item = group['items'][itemIndex];
-                              final globalIndex = _getGlobalIndex(groupIndex, itemIndex);
-                              final isSelected = selectedIndex == globalIndex;
+                          ...List.generate(group['items'].length, (itemIndex) {
+                            final item = group['items'][itemIndex];
+                            final globalIndex = _getGlobalIndex(
+                              groupIndex,
+                              itemIndex,
+                            );
+                            final isSelected = selectedIndex == globalIndex;
 
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 4),
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
                                 child: InkWell(
                                   onTap: () {
                                     setState(() {
@@ -206,6 +209,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                     });
                                   },
                                   borderRadius: BorderRadius.circular(8),
+                                  // hoverColor: const Color(
+                                  //   0xFF10B981,
+                                  // ).withOpacity(0.05),
+                                  hoverColor: Colors.blueAccent,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 16,
@@ -213,7 +220,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: isSelected
-                                          ? const Color(0xFF10B981).withOpacity(0.1)
+                                          ? const Color(
+                                              0xFF10B981,
+                                            ).withOpacity(0.1)
                                           : Colors.transparent,
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -249,7 +258,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                             ),
                                             decoration: BoxDecoration(
                                               color: const Color(0xFF10B981),
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                             child: Text(
                                               item['badge'],
@@ -264,9 +274,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          }),
 
                           // Add spacing between groups
                           if (groupIndex < menuItems.length - 1)
