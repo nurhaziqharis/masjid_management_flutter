@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -204,15 +205,21 @@ class _DashboardPageState extends State<DashboardPage> {
                                 cursor: SystemMouseCursors.click,
                                 child: InkWell(
                                   onTap: () {
+                                    if (globalIndex == 7) {
+                                      print('system logout');
+                                      context.replace('/'); // navigate immediately
+                                      return; // stop further setState
+                                    }
+
                                     setState(() {
                                       selectedIndex = globalIndex;
+                                      print('$selectedIndex');
                                     });
                                   },
                                   borderRadius: BorderRadius.circular(8),
-                                  // hoverColor: const Color(
-                                  //   0xFF10B981,
-                                  // ).withOpacity(0.05),
-                                  hoverColor: Colors.blueAccent,
+                                  hoverColor: const Color(
+                                    0xFF10B981,
+                                  ).withOpacity(0.05),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 16,
