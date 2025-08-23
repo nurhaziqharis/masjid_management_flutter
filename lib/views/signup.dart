@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:go_router/go_router.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -770,7 +771,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.pushReplacementNamed(context, '/');
+                                      context.go('/');
                                     },
                                     child: const Text(
                                       'Sign In',

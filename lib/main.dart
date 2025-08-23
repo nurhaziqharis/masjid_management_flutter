@@ -2,20 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:masjid_management_flutter/views/dashboard_admin.dart';
 import 'dart:convert';
-
+import 'package:go_router/go_router.dart';
 import 'package:masjid_management_flutter/views/signup.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final GoRouter _router = GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const LoginPage()),
+      GoRoute(path: '/register', builder: (context, state) => const SignupPage()),
+      GoRoute(
+        path: '/dashboardadmin',
+        builder: (context, state) => const DashboardPage(),
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(  // Changed from MaterialApp to MaterialApp.router
       title: 'Masjid Management',
+      routerConfig: _router,      // Added this line
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF10B981), // Modern emerald green
@@ -24,13 +37,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Inter',
       ),
-      initialRoute: '/',
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (context) => const LoginPage(),
-        '/register': (context) => const SignupPage(),
-        '/dashboardadmin' : (context) => const DashboardPage()
-      },
     );
   }
 }
@@ -62,10 +69,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.3, 0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0.3, 0), end: Offset.zero).animate(
+          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+        );
 
     _animationController.forward();
   }
@@ -87,9 +94,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       try {
         final response = await http.post(
           Uri.parse('http://127.0.0.1:8080/api/v1/auth/login'),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: {'Content-Type': 'application/json'},
           body: json.encode({
             'username': _emailController.text.trim(),
             'password': _passwordController.text,
@@ -108,7 +113,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 behavior: SnackBarBehavior.floating,
               ),
             );
-            Navigator.pushReplacementNamed(context, '/dashboardadmin');
+            // Use GoRouter navigation instead of Navigator.pushReplacementNamed
+            context.go('/dashboardadmin');
           }
         } else if (response.statusCode == 401) {
           if (mounted) {
@@ -158,11 +164,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             color: Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 20,
-          ),
+          child: Icon(icon, color: Colors.white, size: 20),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -297,13 +299,19 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         const SizedBox(height: 50),
 
                         // Features
-                        _buildFeatureItem(Icons.schedule, 'Automated Prayer Times'),
+                        _buildFeatureItem(
+                          Icons.schedule,
+                          'Automated Prayer Times',
+                        ),
                         const SizedBox(height: 20),
                         _buildFeatureItem(Icons.event_note, 'Event Management'),
                         const SizedBox(height: 20),
                         _buildFeatureItem(Icons.groups, 'Member Directory'),
                         const SizedBox(height: 20),
-                        _buildFeatureItem(Icons.analytics, 'Analytics & Reports'),
+                        _buildFeatureItem(
+                          Icons.analytics,
+                          'Analytics & Reports',
+                        ),
                       ],
                     ),
                   ),
@@ -379,7 +387,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.grey[300]!),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey[300]!,
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
@@ -390,21 +400,20 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                  ),
                                 ),
                                 filled: true,
                                 fillColor: Colors.white,
                                 contentPadding: const EdgeInsets.all(20),
                               ),
-                              // validator: (value) {
-                              //   if (value?.isEmpty ?? true) {
-                              //     return 'Please enter your email';
-                              //   }
-                              //   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value!)) {
-                              //     return 'Please enter a valid email';
-                              //   }
-                              //   return null;
-                              // },
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter your email';
+                                }
+                                return null;
+                              },
                             ),
 
                             const SizedBox(height: 20),
@@ -443,7 +452,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.grey[300]!),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey[300]!,
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
@@ -454,7 +465,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                  ),
                                 ),
                                 filled: true,
                                 fillColor: Colors.white,
@@ -530,9 +543,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             // Divider
                             Row(
                               children: [
-                                Expanded(child: Divider(color: Colors.grey[300])),
+                                Expanded(
+                                  child: Divider(color: Colors.grey[300]),
+                                ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
                                   child: Text(
                                     'or',
                                     style: TextStyle(
@@ -542,7 +559,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 ),
-                                Expanded(child: Divider(color: Colors.grey[300])),
+                                Expanded(
+                                  child: Divider(color: Colors.grey[300]),
+                                ),
                               ],
                             ),
 
@@ -561,7 +580,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, '/register');
+                                    // Use GoRouter navigation
+                                    context.go('/register');
                                   },
                                   child: const Text(
                                     'Create Account',
