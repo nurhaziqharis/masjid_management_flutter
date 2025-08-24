@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:masjid_management_flutter/segment/event_segment.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -15,7 +16,8 @@ class _DashboardPageState extends State<DashboardPage> {
   // Define your pages
   final pages = [
     const Center(child: Text("Dashboard Page", style: TextStyle(fontSize: 24))),
-    const Center(child: Text("Tasks Page", style: TextStyle(fontSize: 24))),
+    // const Center(child: Text("Event", style: TextStyle(fontSize: 24))),
+    const EventSegment(),
     const Center(child: Text("Calendar Page", style: TextStyle(fontSize: 24))),
     const Center(child: Text("Analytics Page", style: TextStyle(fontSize: 24))),
     const Center(child: Text("Team Page", style: TextStyle(fontSize: 24))),
@@ -37,8 +39,8 @@ class _DashboardPageState extends State<DashboardPage> {
           'badge': null,
         },
         {
-          'icon': Icons.task_alt,
-          'label': 'Tasks',
+          'icon': Icons.event,
+          'label': 'Event',
           'isActive': false,
           'badge': '23',
         },
