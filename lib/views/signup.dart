@@ -81,10 +81,12 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             'username': _nameController.text.trim(),
             'email': _emailController.text.trim(),
             'full_name': _nameController.text.trim(),
-            'role': "USER",
             'password': _passwordController.text,
+            'role': "USER",
           }),
         );
+        print(response.body);
+        print('rewrew');
 
         if (response.statusCode == 201 || response.statusCode == 200) {
           final responseData = json.decode(response.body);
