@@ -73,7 +73,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
 
       try {
         final response = await http.post(
-          Uri.parse('http://127.0.0.1:8080/api/v1/auth/register'),
+          Uri.parse('http://127.0.0.1:8000/api/v1/auth/register'),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -85,7 +85,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             'password': _passwordController.text,
           }),
         );
-
+        print(response.body);
         if (response.statusCode == 201 || response.statusCode == 200) {
           final responseData = json.decode(response.body);
 

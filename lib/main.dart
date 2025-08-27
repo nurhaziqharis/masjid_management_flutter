@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(  // Changed from MaterialApp to MaterialApp.router
       title: 'Masjid Management',
       routerConfig: _router,      // Added this line
-      theme: ThemeData(
+      theme: ThemeData(   //Here is theme.data until font family setting
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF10B981), // Modern emerald green
           brightness: Brightness.light,
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
       try {
         final response = await http.post(
-          Uri.parse('http://127.0.0.1:8080/api/v1/auth/login'),
+          Uri.parse('http://127.0.0.1:8000/api/v1/auth/login'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode({
             'username': _emailController.text.trim(),
