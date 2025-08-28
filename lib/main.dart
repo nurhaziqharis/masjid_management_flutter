@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:masjid_management_flutter/views/dashboard_admin.dart';
+import 'package:masjid_management_flutter/pages/dashboard_admin.dart';
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
-import 'package:masjid_management_flutter/views/signup.dart';
+import 'package:masjid_management_flutter/pages/signup.dart';
 
 void main() {
   runApp(MyApp());

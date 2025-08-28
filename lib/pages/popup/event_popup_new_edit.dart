@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../../enums/enums.dart';
 import '../../models/event.dart';
 import '../../styles/masjid_button_style.dart';
@@ -34,7 +37,6 @@ class EventFormDialogState extends State<EventFormDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       title: const Text("Add New Event"),
       content: SingleChildScrollView(
@@ -74,10 +76,7 @@ class EventFormDialogState extends State<EventFormDialog> {
                 items: Category.values.map((Category category) {
                   return DropdownMenuItem<Category>(
                     value: category,
-                    child: Text(category
-                        .toString()
-                        .split('.')
-                        .last),
+                    child: Text(category.toString().split('.').last),
                   );
                 }).toList(),
                 onChanged: (Category? newValue) {
@@ -111,8 +110,7 @@ class EventFormDialogState extends State<EventFormDialog> {
                         ),
                         child: Text(
                           _startDate != null
-                              ? '${_startDate!.day}/${_startDate!
-                              .month}/${_startDate!.year}'
+                              ? '${_startDate!.day}/${_startDate!.month}/${_startDate!.year}'
                               : 'Select Date',
                         ),
                       ),
@@ -152,8 +150,7 @@ class EventFormDialogState extends State<EventFormDialog> {
                         ),
                         child: Text(
                           _endDate != null
-                              ? '${_endDate!.day}/${_endDate!.month}/${_endDate!
-                              .year}'
+                              ? '${_endDate!.day}/${_endDate!.month}/${_endDate!.year}'
                               : 'Select Date',
                         ),
                       ),
@@ -248,23 +245,27 @@ class EventFormDialogState extends State<EventFormDialog> {
     }
   }
 
-  void _saveEvent() {
-    // Validation
-    if (_nameController.text.isEmpty) {
+  void _saveEvent() async {
+    // Validate required fields
+    if (_nameController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        _locationController.text.isEmpty ||
+        _startDate == null ||
+        _endDate == null ||
+        _startTime == null ||
+        _endTime == null ||
+        _selectedCategory == Category.EMPTY) {
+      // Show error dialog or snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter event name')),
+        SnackBar(
+          content: Text('Please fill in all fields'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
 
-    if (_startDate == null || _startTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select start date and time')),
-      );
-      return;
-    }
-
-    // Combine date and time
+    // Combine date and time into DateTime objects
     DateTime startDateTime = DateTime(
       _startDate!.year,
       _startDate!.month,
@@ -273,39 +274,60 @@ class EventFormDialogState extends State<EventFormDialog> {
       _startTime!.minute,
     );
 
-    DateTime? endDateTime;
-    if (_endDate != null && _endTime != null) {
-      endDateTime = DateTime(
-        _endDate!.year,
-        _endDate!.month,
-        _endDate!.day,
-        _endTime!.hour,
-        _endTime!.minute,
+    DateTime endDateTime = DateTime(
+      _endDate!.year,
+      _endDate!.month,
+      _endDate!.day,
+      _endTime!.hour,
+      _endTime!.minute,
+    );
+
+    try {
+      print('Saving event...');
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8080/api/v1/auth/createevent'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": _nameController.text,
+          "description": _descriptionController.text,
+          "location": _locationController.text,
+          "starttime": startDateTime.toIso8601String(),
+          "endtime": endDateTime.toIso8601String(),
+          "category": _selectedCategory.toString().split('.').last,
+        }),
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Success - close the dialog
+        Navigator.of(context).pop(true); // Return true to indicate success
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Event created successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Error - show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to create event. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (error) {
+      print('Error creating event: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Network error. Please check your connection.'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
-
-    // Create Event object
-    Event newEvent = Event(
-      name: _nameController.text,
-      description: _descriptionController.text,
-      category: _selectedCategory,
-      location: _locationController.text,
-      startTime: startDateTime,
-      endTime: endDateTime,
-    );
-
-    // TODO: Save the event to your database or state management
-    print('New Event Created: ${newEvent.name}');
-
-    // Close the dialog
-    Navigator.of(context).pop();
-
-    // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Event "${newEvent.name}" created successfully!'),
-        backgroundColor: Color(0xFF10B981),
-      ),
-    );
   }
 }

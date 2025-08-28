@@ -85,8 +85,6 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             'role': "USER",
           }),
         );
-        print(response.body);
-        print('rewrew');
 
         if (response.statusCode == 201 || response.statusCode == 200) {
           final responseData = json.decode(response.body);

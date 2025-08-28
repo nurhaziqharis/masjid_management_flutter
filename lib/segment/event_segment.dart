@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:masjid_management_flutter/enums/enums.dart';
 import 'package:masjid_management_flutter/models/event.dart';
-import 'package:masjid_management_flutter/views/popup/event_popup.dart';
+import 'package:masjid_management_flutter/pages/popup/event_popup_new_edit.dart';
 
 import '../styles/masjid_button_style.dart';
 
