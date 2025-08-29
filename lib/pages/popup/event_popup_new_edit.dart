@@ -1,11 +1,60 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../../enums/enums.dart';
-import '../../models/event.dart';
-import '../../styles/masjid_button_style.dart';
 
+// Example enums
+enum Category {
+  EMPTY,
+  PRAYER,
+  EDUCATION,
+  COMMUNITY,
+  CHARITY,
+  YOUTH,
+  WOMEN
+}
+
+// Main App
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Event Form Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: HomePage(),
+    );
+  }
+}
+
+// Home page that shows the button to open dialog
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Event Manager'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => EventFormDialog(),
+            );
+          },
+          child: Text('Add New Event'),
+        ),
+      ),
+    );
+  }
+}
+
+// Event Form Dialog
 class EventFormDialog extends StatefulWidget {
   @override
   EventFormDialogState createState() => EventFormDialogState();
@@ -15,8 +64,6 @@ class EventFormDialogState extends State<EventFormDialog> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _startTimeController = TextEditingController();
-  final TextEditingController _endTimeController = TextEditingController();
 
   Category _selectedCategory = Category.EMPTY;
   DateTime? _startDate;
@@ -29,8 +76,6 @@ class EventFormDialogState extends State<EventFormDialog> {
     _nameController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
-    _startTimeController.dispose();
-    _endTimeController.dispose();
     super.dispose();
   }
 
@@ -187,7 +232,10 @@ class EventFormDialogState extends State<EventFormDialog> {
         ElevatedButton(
           onPressed: _saveEvent,
           child: Text('Save Event'),
-          style: MasjidButtonStyle.greenButtonMasjid,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+          ),
         ),
       ],
     );
@@ -255,12 +303,8 @@ class EventFormDialogState extends State<EventFormDialog> {
         _startTime == null ||
         _endTime == null ||
         _selectedCategory == Category.EMPTY) {
-      // Show error dialog or snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please fill in all fields'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Please fill in all fields')),
       );
       return;
     }
@@ -282,51 +326,46 @@ class EventFormDialogState extends State<EventFormDialog> {
       _endTime!.minute,
     );
 
+    // Create the request body data
+    Map<String, dynamic> requestData = {
+      "name": _nameController.text,
+      "description": _descriptionController.text,
+      "location": _locationController.text,
+      "starttime": startDateTime.toIso8601String(),
+      "endtime": endDateTime.toIso8601String(),
+      "category": _selectedCategory.toString().split('.').last,
+    };
+
+    // Encode to JSON and print it
+    String jsonBody = jsonEncode(requestData);
+    print('=== JSON PAYLOAD ===');
+    print('===================');
+
     try {
-      print('Saving event...');
       final response = await http.post(
         Uri.parse('http://127.0.0.1:8080/api/v1/auth/createevent'),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "name": _nameController.text,
-          "description": _descriptionController.text,
-          "location": _locationController.text,
-          "starttime": startDateTime.toIso8601String(),
-          "endtime": endDateTime.toIso8601String(),
-          "category": _selectedCategory.toString().split('.').last,
-        }),
+        body: jsonBody,
       );
 
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
+      print(jsonBody);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Success - close the dialog
-        Navigator.of(context).pop(true); // Return true to indicate success
-
-        // Show success message
+        Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Event created successfully!'),
-            backgroundColor: Colors.green,
-          ),
+          SnackBar(content: Text('Event created successfully!')),
         );
       } else {
-        // Error - show error message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to create event. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Failed to create event. Please try again.')),
         );
       }
     } catch (error) {
       print('Error creating event: $error');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Network error. Please check your connection.'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Network error. Please check your connection.')),
       );
     }
   }
