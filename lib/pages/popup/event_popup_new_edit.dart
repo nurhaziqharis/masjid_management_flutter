@@ -1,24 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:masjid_management_flutter/styles/masjid_button_style.dart';
+import '../../enums/enums.dart';
 
-// Example enums
-enum Category {
-  EMPTY,
-  PRAYER,
-  EDUCATION,
-  COMMUNITY,
-  CHARITY,
-  YOUTH,
-  WOMEN
-}
-
-// Main App
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class EventPopupNewEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -232,10 +218,7 @@ class EventFormDialogState extends State<EventFormDialog> {
         ElevatedButton(
           onPressed: _saveEvent,
           child: Text('Save Event'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
-          ),
+          style: MasjidButtonStyle.greenButtonMasjid,
         ),
       ],
     );
