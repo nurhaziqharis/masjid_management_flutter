@@ -1,9 +1,7 @@
 enum Category {
   EMPTY,
-  PRAYER,
-  EDUCATION,
-  COMMUNITY,
-  CHARITY,
-  YOUTH,
-  WOMEN
+  Festival,
+  KnowledgeSharing,
+  Routine,
+  Seminar,
 }

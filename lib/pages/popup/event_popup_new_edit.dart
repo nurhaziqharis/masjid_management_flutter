@@ -313,9 +313,9 @@ class EventFormDialogState extends State<EventFormDialog> {
     Map<String, dynamic> requestData = {
       "name": _nameController.text,
       "description": _descriptionController.text,
+      "start_time": startDateTime.toUtc().toIso8601String(),
+      "end_time": endDateTime.toUtc().toIso8601String(),
       "location": _locationController.text,
-      "starttime": startDateTime.toIso8601String(),
-      "endtime": endDateTime.toIso8601String(),
       "category": _selectedCategory.toString().split('.').last,
     };
 
@@ -326,7 +326,7 @@ class EventFormDialogState extends State<EventFormDialog> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8080/api/v1/auth/createevent'),
+        Uri.parse('http://127.0.0.1:8080/api/v1/events'),
         headers: {"Content-Type": "application/json"},
         body: jsonBody,
       );
