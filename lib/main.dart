@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:masjid_management_flutter/pages/dashboard_admin.dart';
 import 'dart:convert';
-import 'package:go_router/go_router.dart';
 import 'package:masjid_management_flutter/pages/signup.dart';
+import 'package:masjid_management_flutter/router/router.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,23 +13,11 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final GoRouter _router = GoRouter(
-    initialLocation: '/',
-    routes: [
-      GoRoute(path: '/', builder: (context, state) => const LoginPage()),
-      GoRoute(path: '/register', builder: (context, state) => const SignupPage()),
-      GoRoute(
-        path: '/dashboardadmin',
-        builder: (context, state) => const DashboardPage(),
-      ),
-    ],
-  );
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(  // Changed from MaterialApp to MaterialApp.router
       title: 'Masjid Management',
-      routerConfig: _router,      // Added this line
+      routerConfig: appRouter,      // Added this line
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF10B981), // Modern emerald green
@@ -114,7 +103,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ),
             );
             // Use GoRouter navigation instead of Navigator.pushReplacementNamed
-            context.go('/dashboardadmin');
+            context.go('/dashboardadmin/${_emailController.text}');
           }
         } else if (response.statusCode == 401) {
           if (mounted) {

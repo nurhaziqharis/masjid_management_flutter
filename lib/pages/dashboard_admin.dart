@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:masjid_management_flutter/models/user.dart';
 import 'package:masjid_management_flutter/segment/event_segment.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+  const DashboardPage({super.key, required this.user});
+  final User user;
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
