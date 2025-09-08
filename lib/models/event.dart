@@ -1,4 +1,4 @@
-import 'package:masjid_management_flutter/enums/enums.dart';
+import 'package:masjid_management_flutter/enums/enum_event_category.dart';
 
 class Event {
   final String name;
@@ -6,7 +6,7 @@ class Event {
   final String location;
   final DateTime? startTime;
   final DateTime? endTime;
-  final Category category;
+  final EventCategory category;
 
   Event({
     required this.name,

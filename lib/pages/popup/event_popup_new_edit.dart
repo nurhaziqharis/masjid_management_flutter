@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:masjid_management_flutter/styles/masjid_button_style.dart';
-import '../../enums/enums.dart';
+import '../../enums/enum_event_category.dart';
 
 class EventPopupNewEdit extends StatelessWidget {
   @override
@@ -51,7 +51,7 @@ class EventFormDialogState extends State<EventFormDialog> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
 
-  Category _selectedCategory = Category.EMPTY;
+  EventCategory _selectedCategory = EventCategory.EMPTY;
   DateTime? _startDate;
   DateTime? _endDate;
   TimeOfDay? _startTime;
@@ -98,21 +98,21 @@ class EventFormDialogState extends State<EventFormDialog> {
               SizedBox(height: 16),
 
               // Category Dropdown
-              DropdownButtonFormField<Category>(
+              DropdownButtonFormField<EventCategory>(
                 value: _selectedCategory,
                 decoration: InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
                 ),
-                items: Category.values.map((Category category) {
-                  return DropdownMenuItem<Category>(
+                items: EventCategory.values.map((EventCategory category) {
+                  return DropdownMenuItem<EventCategory>(
                     value: category,
                     child: Text(category.toString().split('.').last),
                   );
                 }).toList(),
-                onChanged: (Category? newValue) {
+                onChanged: (EventCategory? newValue) {
                   setState(() {
-                    _selectedCategory = newValue ?? Category.EMPTY;
+                    _selectedCategory = newValue ?? EventCategory.EMPTY;
                   });
                 },
               ),
@@ -285,7 +285,7 @@ class EventFormDialogState extends State<EventFormDialog> {
         _endDate == null ||
         _startTime == null ||
         _endTime == null ||
-        _selectedCategory == Category.EMPTY) {
+        _selectedCategory == EventCategory.EMPTY) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please fill in all fields')),
       );

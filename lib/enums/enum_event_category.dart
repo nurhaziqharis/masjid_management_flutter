@@ -1,4 +1,4 @@
-enum Category {
+enum EventCategory {
   EMPTY,
   Festival,
   KnowledgeSharing,
@@ -6,18 +6,18 @@ enum Category {
   Seminar,
 }
 
-extension CategoryExtension on Category {
+extension EventCategoryExtension on EventCategory {
   String toApiValue() {
     switch (this) {
-      case Category.EMPTY:
+      case EventCategory.EMPTY:
         return "Empty";
-      case Category.Festival:
+      case EventCategory.Festival:
         return "Festival";
-      case Category.KnowledgeSharing:
+      case EventCategory.KnowledgeSharing:
         return "Knowledge Sharing";
-      case Category.Routine:
+      case EventCategory.Routine:
         return "Routine";
-      case Category.Seminar:
+      case EventCategory.Seminar:
         return "Seminar";
     }
   }
